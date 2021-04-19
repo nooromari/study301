@@ -28,10 +28,10 @@ client.connect().then(()=> app.listen( PORT , ()=> console.log(`I'm listen in ${
 app.get('/home',handleHome);
 app.get('/character/my-fav-characters',handleFavChar);
 app.get('/character/:character_id',handleDetails);
-app.get('/character/create', handleCreate);
-app.get('/character/my-characters', handleChar);
+app.get('/characters', handleCreate);
+app.get('/characters/my-characters', handleChar);
 app.post('/favorite-character',handleSave);
-app.post('/character/create',handleSaveCreate);
+app.post('/characters',handleSaveCreate);
 app.put('/character/:character_id',handleUpdate);
 app.delete('/character/:character_id',handleDelete);
 
@@ -74,13 +74,12 @@ function handleFavChar(req,res){
 
 function handleDetails(req,res){
   const id = req.params.character_id;
-  //   console.log(id);
   const sql = 'SELECT * FROM characters WHERE id=$1;';
   const value = [id];
   client.query(sql,value).then(result =>{
     res.render('one-ch', {data : result.rows[0]});
   })
-    .catch(error=> console.log('get api data from DB error'));
+    .catch(error=> console.log('get one char data from DB error'));
 }
 
 function handleUpdate(req,res){
@@ -105,7 +104,7 @@ function handleDelete(req,res){
 }
 
 function handleCreate(req,res){
-  res.render('create.ejs');
+  res.render('create-char');
 }
 
 function handleSaveCreate(req,res){
@@ -113,7 +112,7 @@ function handleSaveCreate(req,res){
   const sql = 'INSERT INTO characters (name,house,patronus,alive,creat_by) VALUES ($1,$2,$3,$4,$5);';
   const values = [name,house,patronus,alive,'user'];
   client.query(sql,values).then(() =>{
-    res.redirect('/character/my-characters');
+    res.redirect('/characters/my-characters');
   })
     .catch(error=> console.log('save to DB error'));
 }
