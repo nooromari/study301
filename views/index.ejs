@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('layout/head')%>
+<body>
+    <%- include('layout/header')%>
+    <main>
+        <% data.forEach(charInfo =>{ %> 
+            <section>
+        <%- include('details',{character : charInfo})%>
+       
+        <form action="/favorite-character" method="post">
+            <input type="hidden" name="name" value="<%= charInfo.name %>">
+            <input type="hidden" name="house" value="<%= charInfo.house %>">
+            <input type="hidden" name="patronus" value="<%= charInfo.patronus %>">
+            <input type="hidden" name="alive" value="<%= charInfo.alive %>">
+
+            <button type="submit">save to fav</button>
+        </form>
+    </section>
+        <% })%>
+    </main>
+    <%- include('layout/footer')%>
+</body>
+</html>

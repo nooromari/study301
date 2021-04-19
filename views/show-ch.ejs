@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('layout/head')%>
+<body>
+    <%- include('layout/header')%>
+    <main>
+        <% data.forEach(charInfo =>{ %>
+            <section>
+        <%- include('details',{character : charInfo})%>
+        </section>
+        <% })%>
+    </main>
+    <%- include('layout/footer')%>
+</body>
+</html>

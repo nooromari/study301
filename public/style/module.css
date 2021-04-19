@@ -1,0 +1,23 @@
+@import url(reset.css);
+@import url(base.css);
+@import url(layout.css);
+
+h1{
+    text-align: center;
+    font-size: xx-large;
+    margin: 2%;
+}
+
+h3{
+    text-align: center;
+    font-size: x-large;
+}
+
+footer{
+    text-align: center;
+    font-size: x-large;
+    font-weight: bold;
+    color: white;
+    padding: 15px;
+    background-color: rgba(255, 255, 255, 0.158);
+}
