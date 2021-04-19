@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('layout/head')%>
+
+    <body>
+        <%- include('layout/header')%>
+            <main>
+                <section>
+                    <form action="/character/<%= data.id %>?_method=PUT" method="post">
+                        <input type="text" name="name" value="<%= data.name %>">
+                        <input type="text" name="house" value="<%= data.house %>">
+                        <input type="text" name="patronus" value="<%= data.patronus %>">
+                        <div>
+                            <% if(data.alive){%>
+                                <input type="radio" name="alive" value="true" checked>true</input>
+                                <input type="radio" name="alive" value="false">false</input>
+                                <%} else {%>
+                                    <input type="radio" name="alive" value="false" checked>false</input>
+                                    <input type="radio" name="alive" value="true">true</input>
+                                    <% }%>
+                        </div>
+                        <button type="submit">update</button>
+                    </form>
+                    <form action="/character/<%= data.id %>?_method=DELETE" method="post">
+                        <button type="submit">delete</button>
+                    </form>
+                </section>
+            </main>
+            <%- include('layout/footer')%>
+    </body>
+
+</html>

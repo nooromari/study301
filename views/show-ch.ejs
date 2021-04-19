@@ -6,7 +6,7 @@
     <main>
         <% data.forEach(charInfo =>{ %>
             <section>
-        <%- include('details',{character : charInfo})%>
+                <h3><a href="/character/<%= charInfo.id %>"><%= charInfo.name %></a></h3>
         </section>
         <% })%>
     </main>

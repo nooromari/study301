@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('layout/head')%>
+<body>
+    <%- include('layout/header')%>
+    <main>
+       
+        <form action="/character/create" method="post">
+            <input type="text" name="name">
+            <input type="text" name="house">
+            <input type="text" name="patronus">
+            <input type="radio" name="alive" value="t">
+            <input type="radio" name="alive" value="f">
+
+            <button type="submit">create</button>
+        </form>
+    </main>
+    <%- include('layout/footer')%>
+</body>
+</html>

@@ -27,7 +27,13 @@ client.connect().then(()=> app.listen( PORT , ()=> console.log(`I'm listen in ${
 
 app.get('/home',handleHome);
 app.get('/character/my-fav-characters',handleFavChar);
+app.get('/character/:character_id',handleDetails);
+app.get('/character/create', handleCreate);
+app.get('/character/my-characters', handleChar);
 app.post('/favorite-character',handleSave);
+app.post('/character/create',handleSaveCreate);
+app.put('/character/:character_id',handleUpdate);
+app.delete('/character/:character_id',handleDelete);
 
 app.use('*', handleError);
 
@@ -40,7 +46,7 @@ function handleHome(req,res){
   const url = 'http://hp-api.herokuapp.com/api/characters';
 
   superagent.get(url).then(data=> {
-    console.log(data.body);
+    // console.log(data.body);
     const arr = data.body.map(charInfo => new Character(charInfo));
     res.render('index', {data : arr});
   })
@@ -64,6 +70,61 @@ function handleFavChar(req,res){
     res.render('show-ch', {data : result.rows});
   })
     .catch(error=> console.log('get api data from DB error'));
+}
+
+function handleDetails(req,res){
+  const id = req.params.character_id;
+  //   console.log(id);
+  const sql = 'SELECT * FROM characters WHERE id=$1;';
+  const value = [id];
+  client.query(sql,value).then(result =>{
+    res.render('one-ch', {data : result.rows[0]});
+  })
+    .catch(error=> console.log('get api data from DB error'));
+}
+
+function handleUpdate(req,res){
+  const id = req.params.character_id;
+  const {name,house,patronus,alive}= req.body;
+  const sql = 'UPDATE characters SET name=$1 , house=$2 ,patronus=$3 ,alive=$4 WHERE id = $5;';
+  const values = [name,house,patronus,alive,id];
+  client.query(sql,values).then(() =>{
+    res.redirect(`/character/${id}`);
+  })
+    .catch(error=> console.log('update to DB error'));
+}
+
+function handleDelete(req,res){
+  const id = req.params.character_id;
+  const sql = 'DELETE FROM characters WHERE id =$1;';
+  client.query(sql,[id]).then(() =>{
+    res.redirect('/character/my-fav-characters');
+  })
+    .catch(error=> console.log('delete from DB error'));
+
+}
+
+function handleCreate(req,res){
+  res.render('create.ejs');
+}
+
+function handleSaveCreate(req,res){
+  const {name,house,patronus,alive}= req.body;
+  const sql = 'INSERT INTO characters (name,house,patronus,alive,creat_by) VALUES ($1,$2,$3,$4,$5);';
+  const values = [name,house,patronus,alive,'user'];
+  client.query(sql,values).then(() =>{
+    res.redirect('/character/my-characters');
+  })
+    .catch(error=> console.log('save to DB error'));
+}
+
+function handleChar(req,res){
+  const sql = 'SELECT * FROM characters WHERE creat_by=$1;';
+  const value = ['user'];
+  client.query(sql,value).then(result =>{
+    res.render('show-ch', {data : result.rows});
+  })
+    .catch(error=> console.log('get user data from DB error'));
 }
 
 function Character (info){
