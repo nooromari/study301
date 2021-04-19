@@ -9,9 +9,12 @@ require('dotenv').config();
 
 const PORT = process.env.PORT || 3010;
 const DATABASE_URL = process.env.DATABASE_URL;
+const NODE_ENV = process.env.NODE_ENV;
+const options = NODE_ENV === 'production' ? { connectionString: DATABASE_URL, ssl: { rejectUnauthorized: false } } : { connectionString: DATABASE_URL };
+const client = new pg.Client(options);
 
 const app = express();
-const client = new pg.Client(DATABASE_URL);
+// const client = new pg.Client(DATABASE_URL);
 
 app.use(express.urlencoded({extended:true}));
 app.use(methodeoverride('_method'));
@@ -28,6 +31,11 @@ app.post('/favorite-character',handleSave);
 
 app.use('*', handleError);
 
+function handleError(req,res){
+  console.log('error wrong route');
+  res.render('error');
+}
+
 function handleHome(req,res){
   const url = 'http://hp-api.herokuapp.com/api/characters';
 
@@ -37,11 +45,6 @@ function handleHome(req,res){
     res.render('index', {data : arr});
   })
     .catch(error=> console.log('api error'));
-}
-
-function handleError(req,res){
-  console.log('error wrong route');
-  res.render('error');
 }
 
 function handleSave(req,res){
